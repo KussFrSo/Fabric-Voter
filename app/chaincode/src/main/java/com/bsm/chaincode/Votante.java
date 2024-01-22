@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class Votante { // Info basica de votante, el registro y su info personal va en la BBDD
+public final class Votante { // Info basica de votante, el registro y su info personal va en la BBDD
     private String idVotante;
     private boolean votado;
     private int pesoVoto;
