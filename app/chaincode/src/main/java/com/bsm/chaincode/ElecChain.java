@@ -453,18 +453,4 @@ public final class ElecChain implements ContractInterface{
         return votacion.getPropuestas();
     }
 
-/*
-    @Transaction(intent = Transaction.TYPE.SUBMIT)
-    public void darDerechoDeVoto(Context ctx, String voterId) {
-        ChaincodeStub stub = ctx.getStub();
-
-        // Verificar si el votante ya está registrado
-        if (votantes.containsKey(voterId)) {
-            throw new ChaincodeException("Votante ya registrado.");
-        }
-
-        Votante votante = new Votante(false, 1, "",0);
-        votantes.put(voterId, votante);
-    }
-    */
 }
