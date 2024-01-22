@@ -413,6 +413,42 @@ public final class ElecChain implements ContractInterface{
         return genson.deserialize(json, Votacion.class);
     }
 
+    /**
+      * Obtiene la lista de votaciones activas en el sistema.
+      *
+      * @param ctx Contexto de Hyperledger Fabric.
+      * @return List<Votacion> Lista de votaciones activas.
+    */
+    @Transaction(intent = Transaction.TYPE.EVALUATE)
+    public List<Votacion> getVotacionesActivas(Context ctx) {
+        ChaincodeStub stub = ctx.getStub();
+        List<Votacion> votacionesActivas = new ArrayList<>();
+
+        // Obtener todas las claves del estado para identificar votaciones
+        QueryResultsIterator<KeyValue> allVotes = stub.getStateByRange("", "");
+        for (KeyValue keyValue : allVotes) {
+            Votacion votacion = deserializarVotacion(keyValue.getStringValue());
+            if (votacion.getEstado() == EstadoVotacion.ABIERTA) {
+                votacionesActivas.add(votacion);
+            }
+        }
+
+        return votacionesActivas;
+    }
+
+    /**
+     * Obtiene la lista de propuestas de una votación específica.
+     *
+     * @param ctx Contexto de Hyperledger Fabric.
+     * @param idVotacion Identificador de la votación.
+     * @return List<Propuesta> Lista de propuestas de la votación.
+     */
+    @Transaction(intent = Transaction.TYPE.EVALUATE)
+    public List<Propuesta> getPropuestasDeVotacion(Context ctx, String idVotacion) {
+        Votacion votacion = getVotacion(ctx, idVotacion);
+        return votacion.getPropuestas();
+    }
+
 /*
     @Transaction(intent = Transaction.TYPE.SUBMIT)
     public void darDerechoDeVoto(Context ctx, String voterId) {
