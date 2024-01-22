@@ -423,7 +423,7 @@ public final class ElecChain implements ContractInterface{
       * @param ctx Contexto de Hyperledger Fabric.
       * @return List<Votacion> Lista de votaciones activas.
     */
-    @Transaction(intent = Transaction.TYPE.EVALUATE)
+    /*@Transaction(intent = Transaction.TYPE.EVALUATE)
     public List<Votacion> getVotacionesActivas(Context ctx) {
         ChaincodeStub stub = ctx.getStub();
         List<Votacion> votacionesActivas = new ArrayList<>();
@@ -438,7 +438,7 @@ public final class ElecChain implements ContractInterface{
         }
 
         return votacionesActivas;
-    }
+    }*/
 
     /**
      * Obtiene la lista de propuestas de una votación específica.
@@ -447,10 +447,10 @@ public final class ElecChain implements ContractInterface{
      * @param idVotacion Identificador de la votación.
      * @return List<Propuesta> Lista de propuestas de la votación.
      */
-    @Transaction(intent = Transaction.TYPE.EVALUATE)
+    /*@Transaction(intent = Transaction.TYPE.EVALUATE)
     public List<Propuesta> getPropuestasDeVotacion(Context ctx, String idVotacion) {
         Votacion votacion = getVotacion(ctx, idVotacion);
         return votacion.getPropuestas();
     }
-
+    */
 }
