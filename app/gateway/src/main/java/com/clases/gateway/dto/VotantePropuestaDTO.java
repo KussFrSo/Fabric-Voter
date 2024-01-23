@@ -1,8 +1,9 @@
 package com.clases.gateway.dto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
 @Data
-public class CompradorJamonDTO {
+public class VotantePropuestaDTO {
     @ApiModelProperty(value = "Nombre usuario", example = "jairo")
     String name;
 
