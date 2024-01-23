@@ -1,5 +1,6 @@
 package com.clases.gateway.service;
 
+import com.clases.gateway.dto.UserUpdateDTO;
 import com.clases.gateway.entity.TUser;
 import com.clases.gateway.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,48 +13,41 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
-    public String createUser(String name, String dni, String email, Boolean hasDonated, String password, String ledgerId) {
+    public TUser createUser(String name, String dni, String email, Boolean hasDonated, String password, String ledgerId) {
+        Optional<TUser> existUser = userRepository.findByEmail(email);
+        if (existUser.isPresent()) {
+            throw new RuntimeException("Ya existe un usuario con este correo electrónico");
+        }
+
         TUser user = new TUser(name, dni, email, password, hasDonated, ledgerId);
-
-        userRepository.save(user);
-
-        return "Usuario creado";
+        return userRepository.save(user);
     }
 
-    public String deleteUser(Long id) {
-
-        Optional<TUser> optionalUser = userRepository.findById(id);
-
-        if (!optionalUser.isPresent()) {
-            return "Usuario no encontrado";
-        }
-
-        TUser user = optionalUser.get();
+    public void deleteUser(Long id) {
+        TUser user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         userRepository.delete(user);
-        return "Usuario borrado";
     }
 
-    public String updateUser(Long id, String newPassword)
-    {
-        Optional<TUser> optionalUser = userRepository.findById(id);
+    public void updateUser(Long id, UserUpdateDTO userUpdateDTO) {
+        TUser user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        if (!optionalUser.isPresent()) {
-            return "Votante propuesta no encontrado";
+        String newPassword = userUpdateDTO.getPassword();
+        if (newPassword != null && !newPassword.isEmpty()) {
+            user.setPassword(newPassword);
         }
-        TUser user = optionalUser.get();
-        user.setNewPassword(newPassword);
+
+        Boolean hasDonated = userUpdateDTO.getHasDonated();
+        if (hasDonated != null) {
+            user.setHasDonated(hasDonated);
+        }
+
         userRepository.save(user);
-        return "Usuario actualizado";
     }
 
-    public String getUser(Long id) {
-        Optional<TUser> optionalUser = userRepository.findById(id);
-
-        if (!optionalUser.isPresent()) {
-            return "User no encontrado";
-        }
-        TUser user = optionalUser.get();
-
-        return user.toString();
+    public TUser getUser(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
     }
 }

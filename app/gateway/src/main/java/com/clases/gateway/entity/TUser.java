@@ -1,5 +1,7 @@
 package com.clases.gateway.entity;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -11,6 +13,7 @@ import java.io.Serializable;
 @ToString
 public class TUser implements Serializable {
     @Id
+    @Getter
     @SequenceGenerator(name = "user_sequence",
             sequenceName = "user_sequence",
             allocationSize = 1)
@@ -20,21 +23,29 @@ public class TUser implements Serializable {
     )
     private Long id;
 
+    @Getter
     @Column(name = "name")
     private String name;
 
+    @Getter
     @Column(name = "dni")
     private String dni;
 
+    @Getter
     @Column(name = "email")
     private String email;
 
+    @Getter
+    @Setter
     @Column(name = "password")
     private String password;
 
+    @Getter
+    @Setter
     @Column(name = "hasDonated")
     private Boolean hasDonated;
 
+    @Getter
     @Column(name = "ledgerId")
     private String ledgerId;
 
@@ -45,9 +56,5 @@ public class TUser implements Serializable {
         this.password = password;
         this.hasDonated = hasDonated;
         this.ledgerId = ledgerId;
-    }
-
-    public void setNewPassword(String newPassword){
-        this.password = newPassword;
     }
 }

@@ -9,7 +9,7 @@ spring:
       ddl-auto: update
   datasource:
     platform: postgres
-    url: jdbc:postgresql://localhost:5666/iebis
-    username: iebis
+    url: jdbc:postgresql://localhost:5666/elecchain
+    username: elecchain
     password: pass
     driverClassName: org.postgresql.Driver
