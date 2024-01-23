@@ -222,14 +222,16 @@ public final class ElecChain implements ContractInterface{
             throw new ChaincodeException(errorMessage, ElecChain.ElecChainErrors.VOTACION_NOT_AVAILABLE.toString());
         }
 
-        //List<Propuesta> propuestas = votacion.getPropuestas();
         Propuesta propuesta = propuestas.get(Integer.parseInt(idPropuesta) -1);
         Map<String, Votante> votantes = votacion.getVotantes();
         Votante votante = votantes.get(idVotante);
 
-        propuesta.setVotos(propuesta.getVotos() + votante.getPesoVoto());
-        votante.setVotado(true);
-        votante.setPropuestaVotada(idPropuesta);
+        propuestas.remove(Integer.parseInt(idPropuesta) -1);
+        Propuesta nuevaPropuesta = new Propuesta(propuesta.getNombre(),propuesta.getDetallePropuesta(),propuesta.getIdPropuesta(),propuesta.getVotos() + votante.getPesoVoto());
+        propuestas.add(Integer.parseInt(idPropuesta) -1,nuevaPropuesta);
+        votantes.remove(idVotante);
+        Votante nuevoVotante = new Votante(votante.getIdVotante(),true,votante.getPesoVoto(),votante.getDelegarVotoTo(),idPropuesta);
+        votantes.put(idVotante,nuevoVotante);
 
         Votacion nuevaVotacion = new Votacion(idVotacion, votantes, propuestas, votacion.getEstado(), votacion.getTotalVotantes()+1, votacion.getVotosEfectuados()+votante.getPesoVoto(), 0, votacion.getTiempoVotacion(), votacion.getDuracion());
         String newState = genson.serialize(nuevaVotacion);
@@ -370,10 +372,12 @@ public final class ElecChain implements ContractInterface{
         }
 
         // Actualiza la delegación y el peso del voto
-        votantes.get(idVotante).setDelegarVotoTo(to);
-        votantes.get(idVotante).setVotado(true);
-        votantes.get(to).setPesoVoto(votanteDestino.getPesoVoto() + votanteEmisor.getPesoVoto());
-        votantes.get(idVotante).setPesoVoto(0);
+        votantes.remove(idVotante);
+        votantes.remove(to);
+        Votante nuevoVotanteEmisor = new Votante(votanteEmisor.getIdVotante(),true,0,to,votanteEmisor.getPropuestaVotada());
+        Votante nuevoVotanteDestino = new Votante(votanteDestino.getIdVotante(),votanteDestino.isVotado(),votanteDestino.getPesoVoto() + votanteEmisor.getPesoVoto(),votanteDestino.getDelegarVotoTo(),votanteDestino.getPropuestaVotada());
+        votantes.put(idVotante,nuevoVotanteEmisor);
+        votantes.put(to,nuevoVotanteDestino);
 
         Votacion nuevaVotacion = new Votacion(idVotacion, votantes, votacion.getPropuestas(), votacion.getEstado(), votacion.getTotalVotantes(), votacion.getVotosEfectuados(), votacion.getPropuestaGanadora(), votacion.getTiempoVotacion(), votacion.getDuracion());
         String newState = genson.serialize(nuevaVotacion);
@@ -423,7 +427,7 @@ public final class ElecChain implements ContractInterface{
       * @param ctx Contexto de Hyperledger Fabric.
       * @return List<Votacion> Lista de votaciones activas.
     */
-    /*@Transaction(intent = Transaction.TYPE.EVALUATE)
+    @Transaction(intent = Transaction.TYPE.EVALUATE)
     public List<Votacion> getVotacionesActivas(Context ctx) {
         ChaincodeStub stub = ctx.getStub();
         List<Votacion> votacionesActivas = new ArrayList<>();
@@ -438,7 +442,7 @@ public final class ElecChain implements ContractInterface{
         }
 
         return votacionesActivas;
-    }*/
+    }
 
     /**
      * Obtiene la lista de propuestas de una votación específica.
@@ -447,10 +451,10 @@ public final class ElecChain implements ContractInterface{
      * @param idVotacion Identificador de la votación.
      * @return List<Propuesta> Lista de propuestas de la votación.
      */
-    /*@Transaction(intent = Transaction.TYPE.EVALUATE)
+    @Transaction(intent = Transaction.TYPE.EVALUATE)
     public List<Propuesta> getPropuestasDeVotacion(Context ctx, String idVotacion) {
         Votacion votacion = getVotacion(ctx, idVotacion);
         return votacion.getPropuestas();
     }
-    */
+
 }
