@@ -1,6 +1,6 @@
 package com.clases.gateway.repository;
 
-import com.clases.gateway.utils.Constants2;
+import com.clases.gateway.utils.Constants;
 import io.grpc.Grpc;
 import io.grpc.ManagedChannel;
 import io.grpc.TlsChannelCredentials;
@@ -34,18 +34,18 @@ public class FabricGateway {
 
     private static ManagedChannel newGrpcConnection() throws IOException {
         var credentials = TlsChannelCredentials.newBuilder()
-                .trustManager(Constants2.TLS_CERT_PATH_ORG2.toFile())
+                .trustManager(Constants.TLS_CERT_PATH_ORG1.toFile())
                 .build();
-        return Grpc.newChannelBuilder(Constants2.PEER_ENDPOINT_ORG2, credentials)
-                .overrideAuthority(Constants2.OVERRIDE_AUTH_ORG2)
+        return Grpc.newChannelBuilder(Constants.PEER_ENDPOINT_ORG1, credentials)
+                .overrideAuthority(Constants.OVERRIDE_AUTH_ORG1)
                 .build();
     }
 
     private static Identity newIdentity() throws IOException, CertificateException {
-        var certReader = Files.newBufferedReader(Constants2.CERT_PATH_ORG2);
+        var certReader = Files.newBufferedReader(Constants.CERT_PATH_ORG1);
         var certificate = Identities.readX509Certificate(certReader);
 
-        return new X509Identity(Constants2.MSP_ID_ORG2, certificate);
+        return new X509Identity(Constants.MSP_ID_ORG1, certificate);
     }
 
     private static Signer newSigner() throws IOException, InvalidKeyException {
@@ -56,7 +56,7 @@ public class FabricGateway {
     }
 
     private static Path getPrivateKeyPath() throws IOException {
-        try (var keyFiles = Files.list(Constants2.KEY_DIR_PATH_ORG2)) {
+        try (var keyFiles = Files.list(Constants.KEY_DIR_PATH_ORG1)) {
             return keyFiles.findFirst().orElseThrow();
         }
     }

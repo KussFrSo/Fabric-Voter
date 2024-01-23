@@ -9,8 +9,8 @@ public final class Constants {
 
     public static final String MSP_ID_ORG1 = "Org1MSP";
     public static final String CHANNEL_NAME = "mychannel";
-    public static final String CHAINCODE_BASIC_NAME = "basic";
-    public static final String CHAINCODE_JAMON_NAME = "chaincode";
+    public static final String CHANNEL_NAME2 = "channel1";
+    public static final String CHAINCODE_VOTACION_NAME = "chaincode";
 
     // Path to crypto materials.
     public static final Path CRYPTO_PATH_ORG1 = Paths.get("../organizations/peerOrganizations/org1.example.com");
