@@ -6,8 +6,8 @@ public class Constants2 {
 
     public static final String MSP_ID_ORG2 = "Org2MSP";
     public static final String CHANNEL_NAME = "mychannel";
-    public static final String CHAINCODE_BASIC_NAME = "basic";
-    public static final String CHAINCODE_JAMON_NAME = "chaincode";
+    public static final String CHANNEL_NAME2 = "channel1";
+    public static final String CHAINCODE_VOTACION_NAME = "chaincode";
 
     // Path to crypto materials.
     public static final Path CRYPTO_PATH_ORG2 = Paths.get("/home/ev-k8s/Escritorio/BSM/Hyperledger1/fabric-samples/test-network/organizations/peerOrganizations/org2.example.com");
