@@ -130,22 +130,7 @@ Accede a Prometheus y Grafana en los siguientes puertos:
 - Prometheus: http://34.175.29.63:9090
 - Grafana: http://34.175.29.63:3000
 
+## Créditos
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Desarrollado por Jairo Celada Cebrián, Marc Franch Sole y Joan Jimenez Jané.
 
