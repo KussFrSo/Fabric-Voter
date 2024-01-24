@@ -13,7 +13,7 @@ public final class Constants {
     public static final String CHAINCODE_VOTACION_NAME = "chaincode";
 
     // Path to crypto materials.
-    public static final Path CRYPTO_PATH_ORG1 = Paths.get("../organizations/peerOrganizations/org1.example.com");
+    public static final Path CRYPTO_PATH_ORG1 = Paths.get("/o..rganizations/peerOrganizations/org1.example.com");
     // Path to user certificate.
     public static final Path CERT_PATH_ORG1 = CRYPTO_PATH_ORG1.resolve(Paths.get("users/User1@org1.example.com/msp/signcerts/cert.pem"));
     // Path to user private key directory.
@@ -22,6 +22,6 @@ public final class Constants {
     public static final Path TLS_CERT_PATH_ORG1 = CRYPTO_PATH_ORG1.resolve(Paths.get("peers/peer0.org1.example.com/tls/ca.crt"));
 
     // Gateway peer end point.
-    public static final String PEER_ENDPOINT_ORG1 = "localhost:7051";
+    public static final String PEER_ENDPOINT_ORG1 = "34.175.29.63:7051";
     public static final String OVERRIDE_AUTH_ORG1 = "peer0.org1.example.com";
 }
