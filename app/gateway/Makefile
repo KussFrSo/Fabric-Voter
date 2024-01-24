@@ -9,5 +9,5 @@ start-db:
 	postgres:12
 
 stop-db:
-	docker kill iebis-db
+	docker kill elecchain-db
 
