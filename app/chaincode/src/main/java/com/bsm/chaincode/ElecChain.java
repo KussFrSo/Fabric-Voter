@@ -197,9 +197,8 @@ public final class ElecChain implements ContractInterface{
 
         List<Propuesta> propuestas = votacion.getPropuestas();
 
-        // Validar que el votante exista
-        Map<String, Votante> v = votacion.getVotantes();
-        if (votacion.getVotantes().get(idVotante) != null) {
+        // Validar que el votante existe
+        if (votacion.getVotantes().get(idVotante) == null) {
             String errorMessage = String.format("Votante no encontrado: %s", idVotante);
             System.out.println(errorMessage);
             throw new ChaincodeException(errorMessage);
