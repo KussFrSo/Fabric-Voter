@@ -14,6 +14,7 @@ import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ledger.KeyValue;
 import org.hyperledger.fabric.shim.ledger.QueryResultsIterator;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -169,7 +170,7 @@ public final class ElecChain implements ContractInterface{
         }
 
         EstadoVotacion estado = EstadoVotacion.ABIERTA;
-        long tiempoVotacion = System.currentTimeMillis();
+        long tiempoVotacion = stub.getTxTimestamp().getEpochSecond() * 1000;
         Votacion nuevaVotacion = new Votacion(idVotacion,votacion.getNombre(), votacion.getVotantes(), votacion.getPropuestas(), estado, 0, 0, 0, tiempoVotacion, votacion.getDuracion());
 
         String newState = genson.serialize(nuevaVotacion);
@@ -442,11 +443,19 @@ public final class ElecChain implements ContractInterface{
         // Obtener todas las claves del estado para identificar votaciones
         QueryResultsIterator<KeyValue> allVotes = stub.getStateByRange("", "");
         for (KeyValue keyValue : allVotes) {
-            Votacion votacion = deserializarVotacion(keyValue.getStringValue());
-            if (votacion.getEstado() == EstadoVotacion.ABIERTA) {
-                votacionesActivas.add(votacion);
+            String stringValue = keyValue.getStringValue();
+
+            // Verificar si el valor es nulo o vacío antes de deserializar
+            if (stringValue != null && !stringValue.isEmpty()) {
+                Votacion votacion = deserializarVotacion(stringValue);
+
+                // Verificar si la deserialización retorna un objeto no nulo
+                if (votacion != null && votacion.getEstado() == EstadoVotacion.ABIERTA) {
+                    votacionesActivas.add(votacion);
+                }
             }
         }
+
         logger.info(String.format("Imprimir votaciones activas %s", votacionesActivas));
         return votacionesActivas;
     }
@@ -461,8 +470,16 @@ public final class ElecChain implements ContractInterface{
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public List<Propuesta> getPropuestasDeVotacion(Context ctx, String idVotacion) {
         Votacion votacion = getVotacion(ctx, idVotacion);
-        logger.info(String.format("Imprimir propuestas de votacion %s : %s", idVotacion,votacion.getPropuestas()));
-        return votacion.getPropuestas();
+
+        // Verificar si la votación y las propuestas no son nulas
+        if (votacion != null && votacion.getPropuestas() != null) {
+            logger.info(String.format("Imprimir propuestas de votacion %s : %s", idVotacion, votacion.getPropuestas()));
+            return votacion.getPropuestas();
+        } else {
+            // Manejar casos nulos, por ejemplo, devolver una lista vacía
+            logger.warning(String.format("No hay propuestas de votación para %s", idVotacion));
+            return Collections.emptyList();
+        }
     }
 
 }
