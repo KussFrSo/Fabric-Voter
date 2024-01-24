@@ -16,6 +16,9 @@ public final class Votacion {
     private final String id;
 
     @Property()
+    private final String nombre;
+
+    @Property()
     private final Map<String, Votante> votantes;
 
     @Property()
@@ -40,6 +43,7 @@ public final class Votacion {
     private final long duracion;
 
     public Votacion(@JsonProperty("id") final String id,
+                    @JsonProperty("nombre") final String nombre,
                     @JsonProperty("votantes") final Map<String, Votante> votantes,
                     @JsonProperty("propuestas") final List<Propuesta> propuestas,
                     @JsonProperty("estado") final EstadoVotacion estado,
@@ -49,6 +53,7 @@ public final class Votacion {
                     @JsonProperty("tiempoVotacion") final long tiempoVotacion,
                     @JsonProperty("duracion") final long duracion) {
         this.id = id;
+        this.nombre = nombre;
         this.votantes = votantes;
         this.propuestas = propuestas;
         this.estado = estado;

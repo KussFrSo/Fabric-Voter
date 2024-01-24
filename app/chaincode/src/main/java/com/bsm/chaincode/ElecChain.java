@@ -67,7 +67,7 @@ public final class ElecChain implements ContractInterface{
      * @return Votacion Objeto de votación registrado.
      */
     @Transaction(intent = Transaction.TYPE.SUBMIT)
-    public Votacion registrarVotacion(final Context ctx, final String id, final String votantesJson, final String propuestasJson, final String duracionStr) {
+    public Votacion registrarVotacion(final Context ctx, final String id, final String nombre, final String votantesJson, final String propuestasJson, final String duracionStr) {
 
         String clientMSPID = ctx.getClientIdentity().getMSPID();
         ChaincodeStub stub = ctx.getStub();
@@ -123,7 +123,7 @@ public final class ElecChain implements ContractInterface{
         }
 
         EstadoVotacion estado = EstadoVotacion.PREPARACION;
-        Votacion votacion = new Votacion(id, votantes, propuestas, estado, 0, 0, 0, 0, duracion);
+        Votacion votacion = new Votacion(id, nombre, votantes, propuestas, estado, 0, 0, 0, 0, duracion);
 
         String newState = genson.serialize(votacion);
 
@@ -170,7 +170,7 @@ public final class ElecChain implements ContractInterface{
 
         EstadoVotacion estado = EstadoVotacion.ABIERTA;
         long tiempoVotacion = System.currentTimeMillis();
-        Votacion nuevaVotacion = new Votacion(idVotacion, votacion.getVotantes(), votacion.getPropuestas(), estado, 0, 0, 0, tiempoVotacion, votacion.getDuracion());
+        Votacion nuevaVotacion = new Votacion(idVotacion,votacion.getNombre(), votacion.getVotantes(), votacion.getPropuestas(), estado, 0, 0, 0, tiempoVotacion, votacion.getDuracion());
 
         String newState = genson.serialize(nuevaVotacion);
 
@@ -240,7 +240,7 @@ public final class ElecChain implements ContractInterface{
         Votante nuevoVotante = new Votante(votante.getIdVotante(),true,votante.getPesoVoto(),votante.getDelegarVotoTo(),idPropuesta);
         votantes.put(idVotante,nuevoVotante);
 
-        Votacion nuevaVotacion = new Votacion(idVotacion, votantes, propuestas, votacion.getEstado(), votacion.getTotalVotantes()+1, votacion.getVotosEfectuados()+votante.getPesoVoto(), 0, votacion.getTiempoVotacion(), votacion.getDuracion());
+        Votacion nuevaVotacion = new Votacion(idVotacion, votacion.getNombre(),votantes, propuestas, votacion.getEstado(), votacion.getTotalVotantes()+1, votacion.getVotosEfectuados()+votante.getPesoVoto(), 0, votacion.getTiempoVotacion(), votacion.getDuracion());
         String newState = genson.serialize(nuevaVotacion);
         stub.putStringState(idVotacion, newState);
 
@@ -281,7 +281,7 @@ public final class ElecChain implements ContractInterface{
         // Si ha terminado se pone finalizado y guarda ganador, si no, no finaliza
         if(System.currentTimeMillis() > votacion.getTiempoVotacion() + votacion.getDuracion()){
             propuestaGanadora = getPropuestaGanadora(votacion.getPropuestas());
-            Votacion nuevaVotacion = new Votacion(idVotacion, votacion.getVotantes(), votacion.getPropuestas(), EstadoVotacion.FINALIZADA, votacion.getTotalVotantes(), votacion.getVotosEfectuados(), propuestaGanadora, votacion.getTiempoVotacion(), votacion.getDuracion());
+            Votacion nuevaVotacion = new Votacion(idVotacion,votacion.getNombre(), votacion.getVotantes(), votacion.getPropuestas(), EstadoVotacion.FINALIZADA, votacion.getTotalVotantes(), votacion.getVotosEfectuados(), propuestaGanadora, votacion.getTiempoVotacion(), votacion.getDuracion());
 
             String newState = genson.serialize(nuevaVotacion);
 
@@ -386,7 +386,7 @@ public final class ElecChain implements ContractInterface{
         votantes.put(idVotante,nuevoVotanteEmisor);
         votantes.put(to,nuevoVotanteDestino);
 
-        Votacion nuevaVotacion = new Votacion(idVotacion, votantes, votacion.getPropuestas(), votacion.getEstado(), votacion.getTotalVotantes(), votacion.getVotosEfectuados(), votacion.getPropuestaGanadora(), votacion.getTiempoVotacion(), votacion.getDuracion());
+        Votacion nuevaVotacion = new Votacion(idVotacion,votacion.getNombre(), votantes, votacion.getPropuestas(), votacion.getEstado(), votacion.getTotalVotantes(), votacion.getVotosEfectuados(), votacion.getPropuestaGanadora(), votacion.getTiempoVotacion(), votacion.getDuracion());
         String newState = genson.serialize(nuevaVotacion);
 
         stub.putStringState(idVotacion, newState);

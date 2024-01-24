@@ -34,7 +34,7 @@ public class VotacionService {
         return gson.toJson(parsedJson);
     }
 
-    public ResponseDTO registrarVotacion(final String id, final Map<String, Votante> votantes, final List<Propuesta> propuestas, final int duracion) {
+    public ResponseDTO registrarVotacion(final String id,final String nombre, final Map<String, Votante> votantes, final List<Propuesta> propuestas, final int duracion) {
         ResponseDTO response = new ResponseDTO();
         Genson genson = new Genson();
 
@@ -46,7 +46,7 @@ public class VotacionService {
 
             // Get the smart contract from the network.
             Contract contract = network.getContract(Constants.CHAINCODE_VOTACION_NAME);
-            byte[] result = contract.submitTransaction("registrarVotacion", id, votantesJson, propuestasJson, String.valueOf(duracion));
+            byte[] result = contract.submitTransaction("registrarVotacion", id, nombre, votantesJson, propuestasJson, String.valueOf(duracion));
 
             response.setCode("0");
             response.setData(prettyJson(result));
