@@ -14,7 +14,7 @@ public class VotacionController {
 
     @PostMapping(path = "/registrarVotacion")
     public ResponseDTO registrarVotacion(@RequestBody RegistrarVotacionDTO dto) {
-        return votacionService.registrarVotacion(dto.getId(),dto.getVotantes(),dto.getPropuestas(),dto.getEstadoVotacion(),dto.getTotalVotantes(),dto.getVotosEfectuados(),dto.getPropuestaGanadora(),dto.getTiempoVotacion(),dto.getDuracion());}
+        return votacionService.registrarVotacion(dto.getId(),dto.getVotantes(),dto.getPropuestas(),dto.getDuracion());}
 
     @PostMapping(path = "/iniciarVotacion")
     public ResponseDTO iniciarVotacion(@RequestBody String idVotacion) {

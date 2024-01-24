@@ -1,5 +1,6 @@
 package com.bsm.chaincode;
 
+import com.owlike.genson.GenericType;
 import com.owlike.genson.Genson;
 import org.hyperledger.fabric.Logger;
 import org.hyperledger.fabric.contract.Context;
@@ -12,7 +13,6 @@ import org.hyperledger.fabric.shim.ChaincodeException;
 import org.hyperledger.fabric.shim.ChaincodeStub;
 import org.hyperledger.fabric.shim.ledger.KeyValue;
 import org.hyperledger.fabric.shim.ledger.QueryResultsIterator;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -61,17 +61,24 @@ public final class ElecChain implements ContractInterface{
      *
      * @param ctx Contexto de Hyperledger Fabric.
      * @param id Identificador único de la votación.
-     * @param votantes Mapa de votantes elegibles para la votación.
-     * @param propuestas Lista de propuestas a votar.
-     * @param duracion Duración de la votación en minutos.
+     * @param votantesJson Mapa de votantes elegibles para la votación.
+     * @param propuestasJson Lista de propuestas a votar.
+     * @param duracionStr Duración de la votación en minutos.
      * @return Votacion Objeto de votación registrado.
      */
     @Transaction(intent = Transaction.TYPE.SUBMIT)
-    public Votacion registrarVotacion(final Context ctx, final String id, final Map<String, Votante> votantes, final List<Propuesta> propuestas, final int duracion) {
+    public Votacion registrarVotacion(final Context ctx, final String id, final String votantesJson, final String propuestasJson, final String duracionStr) {
 
         String clientMSPID = ctx.getClientIdentity().getMSPID();
         ChaincodeStub stub = ctx.getStub();
         String state = stub.getStringState(id);
+
+        // Deserializa los objetos JSON a sus tipos originales
+        Genson genson = new Genson();
+        Map<String, Votante> votantes = genson.deserialize(votantesJson, new GenericType<Map<String, Votante>>(){});
+        List<Propuesta> propuestas = genson.deserialize(propuestasJson, new GenericType<List<Propuesta>>(){});
+
+        long duracion = TimeUnit.MINUTES.toMillis(Integer.parseInt(duracionStr));
 
         // Comprobar es un admin
         if (!clientMSPID.equalsIgnoreCase(ElecChainConstants.MINTER_ORG_MSPID.getValue())) {
@@ -116,7 +123,7 @@ public final class ElecChain implements ContractInterface{
         }
 
         EstadoVotacion estado = EstadoVotacion.PREPARACION;
-        Votacion votacion = new Votacion(id, votantes, propuestas, estado, 0, 0, 0, 0, TimeUnit.MINUTES.toMillis(duracion));
+        Votacion votacion = new Votacion(id, votantes, propuestas, estado, 0, 0, 0, 0, duracion);
 
         String newState = genson.serialize(votacion);
 
@@ -440,7 +447,7 @@ public final class ElecChain implements ContractInterface{
                 votacionesActivas.add(votacion);
             }
         }
-
+        logger.info(String.format("Imprimir votaciones activas %s", votacionesActivas));
         return votacionesActivas;
     }
 
@@ -454,6 +461,7 @@ public final class ElecChain implements ContractInterface{
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public List<Propuesta> getPropuestasDeVotacion(Context ctx, String idVotacion) {
         Votacion votacion = getVotacion(ctx, idVotacion);
+        logger.info(String.format("Imprimir propuestas de votacion %s : %s", idVotacion,votacion.getPropuestas()));
         return votacion.getPropuestas();
     }
 

@@ -20,22 +20,6 @@ public class RegistrarVotacionDTO {
             example = "[{'nombre': 'Propuesta1', 'detallePropuesta': 'Detalle1', 'idPropuesta': 1, 'votos': 10}, {'nombre': 'Propuesta2', 'detallePropuesta': 'Detalle2', 'idPropuesta': 2, 'votos': 5}]")
     private List<Propuesta> propuestas;
 
-    @ApiModelProperty(value = "El estado actual de la votación",
-            example = "ABIERTA")
-    private EstadoVotacion estadoVotacion;
-
-    @ApiModelProperty(value = "Total votantes", example = "5")
-    int totalVotantes;
-
-    @ApiModelProperty(value = "Votos efectuados", example = "5")
-    int votosEfectuados;
-
-    @ApiModelProperty(value = "Propuesta ganadora", example = "2")
-    int propuestaGanadora;
-
-    @ApiModelProperty(value = "Tiempo votacion", example = "Pepe")
-    int tiempoVotacion;
-
     @ApiModelProperty(value = "Duracion", example = "60")
     int duracion;
 }

@@ -9,6 +9,7 @@ import com.clases.gateway.utils.Constants;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
+import com.owlike.genson.Genson;
 import lombok.RequiredArgsConstructor;
 import org.hyperledger.fabric.client.Contract;
 import org.springframework.stereotype.Service;
@@ -33,18 +34,22 @@ public class VotacionService {
         return gson.toJson(parsedJson);
     }
 
-    public ResponseDTO registrarVotacion(final String id, final Map<String, Votante> votantes, final List<Propuesta> propuestas, final EstadoVotacion estadoVotacion, final int totalVotantes, final int votosEfectuados, final int propuestaGanadora, final int tiempoVotacion, final int duracion) {
+    public ResponseDTO registrarVotacion(final String id, final Map<String, Votante> votantes, final List<Propuesta> propuestas, final int duracion) {
         ResponseDTO response = new ResponseDTO();
+        Genson genson = new Genson();
 
         try (var gateway = fabricGateway.createConnection().connect()) {
             var network = gateway.getNetwork(Constants.CHANNEL_NAME);
 
+            String votantesJson = genson.serialize(votantes);
+            String propuestasJson = genson.serialize(propuestas);
+
             // Get the smart contract from the network.
             Contract contract = network.getContract(Constants.CHAINCODE_VOTACION_NAME);
-            //byte[] result = contract.submitTransaction("registrarVotacion", id, votantes, propuestas, estadoVotacion, totalVotantes, votosEfectuados, propuestaGanadora, tiempoVotacion, duracion);
+            byte[] result = contract.submitTransaction("registrarVotacion", id, votantesJson, propuestasJson, String.valueOf(duracion));
 
             response.setCode("0");
-            response.setData(prettyJson("result"));
+            response.setData(prettyJson(result));
         } catch (Exception e) {
             response.setCode("1");
             response.setData(e.getMessage());
