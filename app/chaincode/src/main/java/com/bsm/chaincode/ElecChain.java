@@ -196,7 +196,7 @@ public final class ElecChain implements ContractInterface{
         Votacion votacion = getVotacion(ctx, idVotacion);
 
         List<Propuesta> propuestas = votacion.getPropuestas();
-
+        /*
         // Validar que el votante existe
         if (votacion.getVotantes().get(idVotante) == null) {
             String errorMessage = String.format("Votante no encontrado: %s", idVotante);
@@ -214,7 +214,7 @@ public final class ElecChain implements ContractInterface{
             System.out.println(errorMessage);
             throw new ChaincodeException(errorMessage);
         }
-
+        */
         //Comprobar si ha votado ya
         if (votacion.getVotantes().get(idVotante).isVotado()) {
             String errorMessage = String.format("Ya ha votado  %s en esta votacion", idVotante);
