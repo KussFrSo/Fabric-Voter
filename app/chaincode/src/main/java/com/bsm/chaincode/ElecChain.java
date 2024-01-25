@@ -196,9 +196,9 @@ public final class ElecChain implements ContractInterface{
         Votacion votacion = getVotacion(ctx, idVotacion);
 
         List<Propuesta> propuestas = votacion.getPropuestas();
-        /*
+
         // Validar que el votante existe
-        if (votacion.getVotantes().get(idVotante) == null) {
+        if (votacion.getVotantes().get(idVotante).getIdVotante() == null || votacion.getVotantes().get(idVotante).getIdVotante().isEmpty()) {
             String errorMessage = String.format("Votante no encontrado: %s", idVotante);
             System.out.println(errorMessage);
             throw new ChaincodeException(errorMessage);
@@ -221,7 +221,7 @@ public final class ElecChain implements ContractInterface{
             System.out.println(errorMessage);
             throw new ChaincodeException(errorMessage, ElecChain.ElecChainErrors.VOTACION_NOT_AVAILABLE.toString());
         }
-        */
+
         // Comprobar estado votacion es Abierta
         if (votacion.getEstado() != EstadoVotacion.ABIERTA) {
             String errorMessage = String.format("La votacion  %s no esta abierta", idVotacion);
@@ -366,7 +366,14 @@ public final class ElecChain implements ContractInterface{
 
         // Verifica que el votante emisor no haya votado o delegado ya
         if (votanteEmisor.isVotado()) {
-            String errorMessage = String.format("Ya ha votado %s", idVotante);
+            String errorMessage = String.format("Ya ha votado el emisor %s", idVotante);
+            System.out.println(errorMessage);
+            throw new ChaincodeException(errorMessage);
+        }
+
+        // Verifica que el votante receptor no haya votado o delegado ya
+        if (votanteDestino.isVotado()) {
+            String errorMessage = String.format("Ya ha votado el receptor %s", idVotante);
             System.out.println(errorMessage);
             throw new ChaincodeException(errorMessage);
         }
@@ -443,7 +450,7 @@ public final class ElecChain implements ContractInterface{
         QueryResultsIterator<KeyValue> allVotes = stub.getStateByRange("", "");
         for (KeyValue keyValue : allVotes) {
             String stringValue = keyValue.getStringValue();
-
+            logger.info("stringvalue %s"+stringValue);
             // Verificar si el valor es nulo o vacío antes de deserializar
             if (stringValue != null && !stringValue.isEmpty()) {
                 Votacion votacion = deserializarVotacion(stringValue);
