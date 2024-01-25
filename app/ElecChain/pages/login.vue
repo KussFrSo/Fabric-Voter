@@ -6,10 +6,12 @@
     <div class="flex flex-col mb-4 w-[350px] mt-4">
       <label for="email" class="mb-2 font-semibold text-zinc-300">Email</label>
       <input
+        autocomplete="false"
         id="email"
         type="text"
         class="border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         placeholder="email@gmail.com"
+        v-model="email"
       />
     </div>
 
@@ -18,18 +20,28 @@
         >Contraseña</label
       >
       <input
+        autocomplete="false"
         id="pass"
         type="password"
         class="border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         placeholder="********"
+        v-model="password"
       />
     </div>
     <div class="w-[350px] -mt-4 ml-1">
-        <NuxtLink to="/signin" class="text-xs text-yellow-500 hover:text-yellowe-600 hover:underline hover:cursor-pointer">No tienes cuenta?</NuxtLink>
-
+      <NuxtLink
+        to="/signin"
+        class="text-xs text-yellow-500 hover:text-yellowe-600 hover:underline hover:cursor-pointer"
+        >No tienes cuenta?</NuxtLink
+      >
     </div>
 
-      <NuxtLink to="/" class="bg-yellow-500 rounded-lg p-2 text-white hover:bg-yellow-700 w-[350px] mt-4 text-center"> Login </NuxtLink>
+    <button
+      class="bg-yellow-500 rounded-lg p-2 text-white hover:bg-yellow-700 w-[350px] mt-4 text-center"
+      @click="onClickLogin"
+    >
+      Login
+    </button>
   </div>
 </template>
 
@@ -40,9 +52,14 @@ export default defineComponent({
       title: "Login",
     });
     const router = useRouter();
+    const auth = useAuthApi();
+    const toast = useToast();
 
     const showLoginForm = ref<boolean>(false);
     const isLoading = ref<boolean>(false);
+
+    const email = ref<string>();
+    const password = ref<string>();
 
     const onClickShowLogin = () => {
       showLoginForm.value = true;
@@ -52,18 +69,19 @@ export default defineComponent({
       router.push("/signin");
     };
 
-    const onClickLogin = async (values: {
-      email: string;
-      password: string;
-      passwordRemember: boolean;
-    }) => {
+    const onClickLogin = async () => {
       try {
         isLoading.value = true;
-        //await auth.signIn(values.email, values.password, values.passwordRemember);
+        
+        const {data} = await auth.login({
+          email: email.value || "",
+          password: password.value || "",
+        });
+        toast.actionSuccess("Login correcto!")
+        localStorage.setItem('token', data.value.token);
         router.push("/");
-        //toast.actionSuccess();
       } catch (err) {
-        //toast.exception(err);
+        toast.actionDanger("Usuario o contraseña incorrecta!")
       } finally {
         isLoading.value = false;
       }
@@ -75,6 +93,8 @@ export default defineComponent({
       onClickSignIn,
       showLoginForm,
       onClickShowLogin,
+      email,
+      password,
     };
   },
 });

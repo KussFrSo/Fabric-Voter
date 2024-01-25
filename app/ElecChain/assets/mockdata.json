@@ -1,0 +1,20 @@
+ [
+    {
+        "nombre": "Construir Refugio",
+        "detallePropuesta": "Construir un nuevo refugio en la ciudad para personas sin hogar.",
+        "idPropuesta": 1,
+        "votos": 55
+    },
+    {
+        "nombre": "Campaña de Concienciación",
+        "detallePropuesta": "Iniciar una campaña de concienciación sobre el sinhogarismo.",
+        "idPropuesta": 2,
+        "votos": 15
+    },
+    {
+        "nombre": "Programa de Alimentos",
+        "detallePropuesta": "Crear un programa de distribución de alimentos para familias necesitadas.",
+        "idPropuesta": 3,
+        "votos": 30
+      }
+    ]

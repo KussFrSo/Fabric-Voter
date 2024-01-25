@@ -18,9 +18,6 @@
 			<Icon v-if="iconRight" :name="iconRight" :class="iconClass" />
 			<slot name="end"></slot>
 		</div>
-		<div v-if="isLoading" :class="iconClass">
-			<AtomSpinner color="info" />
-		</div>
 	</component>
 </template>
 

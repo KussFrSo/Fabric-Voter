@@ -12,7 +12,7 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
     setup() {
-        const isProposalDetailOpen = useState('emailOpen', () => false);
+        const isProposalDetailOpen = useState('propuestaOpen', () => false);
         return {
             isProposalDetailOpen,
         };

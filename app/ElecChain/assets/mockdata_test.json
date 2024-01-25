@@ -1,0 +1,59 @@
+ [
+    {
+      "duracion": 60,
+      "id": 1,
+      "nombre": "¿Deberíamos apoyar la construcción de un nuevo refugio para personas sin hogar?",
+      "propuestas": [
+        {
+          "nombre": "Construir Refugio",
+          "detallePropuesta": "Construir un nuevo refugio en la ciudad para personas sin hogar.",
+          "idPropuesta": 1,
+          "votos": 25
+        },
+        {
+          "nombre": "Campaña de Concienciación",
+          "detallePropuesta": "Iniciar una campaña de concienciación sobre el sinhogarismo.",
+          "idPropuesta": 2,
+          "votos": 15
+        }
+      ]
+    },
+    {
+      "duracion": 45,
+      "id": 2,
+      "nombre": "¿Cómo deberíamos abordar el problema del hambre en nuestra comunidad?",
+      "propuestas": [
+        {
+          "nombre": "Programa de Alimentos",
+          "detallePropuesta": "Crear un programa de distribución de alimentos para familias necesitadas.",
+          "idPropuesta": 3,
+          "votos": 30
+        },
+        {
+          "nombre": "Huertos Comunitarios",
+          "detallePropuesta": "Desarrollar huertos comunitarios para fomentar la autosuficiencia.",
+          "idPropuesta": 4,
+          "votos": 20
+        }
+      ]
+    },
+    {
+      "duracion": 30,
+      "id": 3,
+      "nombre": "Iniciativas para la educación ambiental en las escuelas",
+      "propuestas": [
+        {
+          "nombre": "Talleres de Reciclaje",
+          "detallePropuesta": "Implementar talleres de reciclaje en las escuelas.",
+          "idPropuesta": 5,
+          "votos": 18
+        },
+        {
+          "nombre": "Programas de Concienciación",
+          "detallePropuesta": "Introducir programas de educación ambiental en el currículo escolar.",
+          "idPropuesta": 6,
+          "votos": 22
+        }
+      ]
+    }
+  ]

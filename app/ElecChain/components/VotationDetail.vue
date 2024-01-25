@@ -47,31 +47,36 @@
         />
       </div>
 
-<div class="mt-4 w-full flex flex-col gap-6">
-	<VotationRangeSlider :value="40" :max="100" color="bg-lime-500">
-        <div class="flex justify-between">
-			<p class="text-base text-zinc-500 ml-1 -mb-1">Si</p>
-			<p class="text-base text-zinc-500 mr-1 -mb-1">40%</p>
-		</div>
-      </VotationRangeSlider>
+      <div class="mt-4 w-full flex flex-col gap-6">
+        <VotationRangeSlider :value="40" :max="100" color="bg-lime-500">
+          <div class="flex justify-between">
+            <p class="text-base text-zinc-500 ml-1 -mb-1">Si</p>
+            <p class="text-base text-zinc-500 mr-1 -mb-1">40%</p>
+          </div>
+        </VotationRangeSlider>
 
-      <VotationRangeSlider :value="20" :max="100" color="bg-red-500">
-        <div class="flex justify-between">
-			<p class="text-base text-zinc-500 ml-1 -mb-1">No</p>
-			<p class="text-base text-zinc-500 mr-1 -mb-1">20%</p>
-		</div>
-      </VotationRangeSlider>
+        <VotationRangeSlider :value="20" :max="100" color="bg-red-500">
+          <div class="flex justify-between">
+            <p class="text-base text-zinc-500 ml-1 -mb-1">No</p>
+            <p class="text-base text-zinc-500 mr-1 -mb-1">20%</p>
+          </div>
+        </VotationRangeSlider>
 
-      <VotationRangeSlider :value="80" :max="100" color="bg-yellow-600">
-        <div class="flex justify-between">
-			<p class="text-base text-zinc-500 ml-1 -mb-1">Abstención</p>
-			<p class="text-base text-zinc-500 mr-1 -mb-1">80%</p>
-		</div>
-      </VotationRangeSlider>
-</div>
+        <VotationRangeSlider :value="80" :max="100" color="bg-yellow-600">
+          <div class="flex justify-between">
+            <p class="text-base text-zinc-500 ml-1 -mb-1">Abstención</p>
+            <p class="text-base text-zinc-500 mr-1 -mb-1">80%</p>
+          </div>
+        </VotationRangeSlider>
+      </div>
     </div>
 
     <button
+      :class="{
+        'pointer-events-none hover:cursor-not-allowed bg-yellow-600/15 text-white/15':
+          !userLogged,
+        'cursor-pointer': userLogged,
+      }"
       class="bg-yellow-600 rounded-md w-full h-12 text-white hover:bg-yellow-700"
       @click="openModal"
     >
@@ -86,14 +91,14 @@ import { defineComponent, ref } from "vue";
 export default defineComponent({
   setup() {
     const modal = useModal();
-    const isProposalDetailOpen = useState("emailOpen", () => false);
+    const isProposalDetailOpen = useState("propuestaOpen", () => false);
+    const userLogged = useState("userLogged", () => false);
 
     const openModal = () => {
-      modal.open(Modals.vote)
-    }
+      modal.open(Modals.vote);
+    };
 
-
-    return { isProposalDetailOpen, openModal };
+    return { isProposalDetailOpen, openModal, userLogged };
   },
 });
 </script>

@@ -10,6 +10,7 @@
           type="text"
           class="border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           placeholder="Tu nombre"
+          v-model="name"
         />
       </div>
 
@@ -20,6 +21,7 @@
           type="text"
           class="border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           placeholder="12345678A"
+          v-model="dni"
         />
       </div>
 
@@ -30,6 +32,7 @@
           type="text"
           class="border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           placeholder="email@gmail.com"
+          v-model="email"
         />
       </div>
   
@@ -42,6 +45,7 @@
           type="password"
           class="border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           placeholder="********"
+          v-model="password"
         />
       </div>
       <div class="w-[350px] -mt-4 ml-1">
@@ -49,7 +53,7 @@
   
       </div>
   
-        <NuxtLink to="/" class="bg-yellow-500 rounded-lg p-2 text-white hover:bg-yellow-700 w-[350px] mt-4 text-center"> SignIn </NuxtLink>
+        <button class="bg-yellow-500 rounded-lg p-2 text-white hover:bg-yellow-700 w-[350px] mt-4 text-center" @click="onClickSignIn"> SignIn </button>
     </div>
   </template>
   
@@ -60,28 +64,40 @@
         title: "Login",
       });
       const router = useRouter();
-  
+      const auth = useAuthApi();
+      const toast = useToast();
+
       const showLoginForm = ref<boolean>(false);
       const isLoading = ref<boolean>(false);
+      const name = ref<string>('')
+      const email = ref<string>('')
+      const password = ref<string>('')
+      const dni = ref<string>('')
   
       const onClickShowLogin = () => {
         showLoginForm.value = true;
       };
   
-      const onClickSignIn = () => {
-        router.push("/signin");
-      };
   
-      const onClickLogin = async (values: {
-        email: string;
-        password: string;
-        passwordRemember: boolean;
-      }) => {
+      const onClickSignIn = async () => {
         try {
           isLoading.value = true;
-          //await auth.signIn(values.email, values.password, values.passwordRemember);
+          await auth.signin(
+            {
+              name: name.value,
+	            email: email.value,
+	            dni: dni.value,
+	            password: password.value, 
+            }
+          );
+
+          const {data} = await auth.login({
+          email: email.value || "",
+          password: password.value || "",
+        });
+          localStorage.setItem('token', data.value.token);
           router.push("/");
-          //toast.actionSuccess();
+          toast.actionSuccess();
         } catch (err) {
           //toast.exception(err);
         } finally {
@@ -90,11 +106,14 @@
       };
   
       return {
-        onClickLogin,
         isLoading,
         onClickSignIn,
-        showLoginForm,
         onClickShowLogin,
+        showLoginForm,
+        name,
+        email,
+        password,
+        dni,
       };
     },
   });

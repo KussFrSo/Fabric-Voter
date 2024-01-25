@@ -18,6 +18,8 @@
     "vue-router": "^4.2.5"
   },
   "dependencies": {
-    "@nuxt/ui": "^2.12.3"
+    "@nuxt/ui": "^2.12.3",
+    "jwt-decode": "^4.0.0",
+    "vue-toastification": "^2.0.0-rc.5"
   }
 }
