@@ -130,6 +130,10 @@ Accede a Prometheus y Grafana en los siguientes puertos:
 - Prometheus: http://34.175.29.63:9090
 - Grafana: http://34.175.29.63:3000
 
+## Probar chaincode  
+
+Para probar el chaincode se pueden seguir los pasos del archivo "Comandos chaincode", donde están todos los comandos de todos los metodos en orden simulando un caso practico.
+
 ## Créditos
 
 Desarrollado por Jairo Celada Cebrián, Marc Franch Sole y Joan Jimenez Jané.
