@@ -73,6 +73,7 @@
 
     <button
       class="bg-yellow-600 rounded-md w-full h-12 text-white hover:bg-yellow-700"
+      @click="openModal"
     >
       Votar
     </button>
@@ -84,8 +85,15 @@ import { defineComponent, ref } from "vue";
 
 export default defineComponent({
   setup() {
+    const modal = useModal();
     const isProposalDetailOpen = useState("emailOpen", () => false);
-    return { isProposalDetailOpen };
+
+    const openModal = () => {
+      modal.open(Modals.vote)
+    }
+
+
+    return { isProposalDetailOpen, openModal };
   },
 });
 </script>

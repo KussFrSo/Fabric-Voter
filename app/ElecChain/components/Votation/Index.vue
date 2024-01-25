@@ -3,14 +3,13 @@
     <div class="absolute top-5 right-5 flex gap-4">
       <button
         class="bg-orange-500 rounded-lg p-2 w-32 text-white hover:bg-orange-700"
+        @click="openModal"
       >
         Crear Votacion
       </button>
-      <button
-        class="bg-yellow-500 rounded-lg p-2 w-32 text-white hover:bg-yellow-700"
-      >
-        Login
-      </button>
+      <NuxtLink to="/login" class="bg-yellow-500 text-center rounded-lg p-2 w-32 text-white hover:bg-yellow-700">
+          Login
+        </NuxtLink>
     </div>
 
     <h1 class="text-white text-4xl">Votaciones</h1>
@@ -86,9 +85,11 @@ export default defineComponent({
       { id: 3, title: "Titulo 3", description: "Descripción 3" },
     ]);
 
+    const modal = useModal();
+
     const proposalTypes = ref<"active" | "ended">("active");
-    const value = ref(40); // Valor actual del deslizador
-    const maxValue = ref(100); // Valor máximo del deslizador
+    const value = ref(40); 
+    const maxValue = ref(100);
 
     // Calcular el ancho de la barra de progreso
     const progressBarWidth = computed(() => {
@@ -96,7 +97,11 @@ export default defineComponent({
       return `${percentage}%`;
     });
 
-    return { mockData, proposalTypes, value, progressBarWidth };
+    const openModal = () => {
+      modal.open(Modals.createVotation)
+    }
+
+    return { mockData, proposalTypes, value, openModal };
   },
   components: { Card },
 });

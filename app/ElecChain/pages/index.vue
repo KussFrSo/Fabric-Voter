@@ -3,6 +3,8 @@
         <Votation class="w-full grow"></Votation>
         <VotationDetail v-if="isProposalDetailOpen" class="w-[500px]"></VotationDetail>
     </div>
+    <ModalCreateVotation/>
+    <ModalVote/>
 </template>
 
 <script lang="ts">
