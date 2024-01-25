@@ -483,14 +483,14 @@ public final class ElecChain implements ContractInterface{
     @Transaction(intent = Transaction.TYPE.EVALUATE)
     public String getPropuestasDeVotacion(Context ctx, final String idVotacion) {
         Votacion votacion = getVotacion(ctx, idVotacion);
-        //List<String> idPropuestas = new ArrayList<>();
-        //for (int i = 0; i< votacion.getPropuestas().size())
 
         // Verificar si la votación y las propuestas no son nulas
         if (votacion != null && votacion.getPropuestas() != null) {
-            logger.info(String.format("Imprimir propuestas de votacion %s : %s", idVotacion, votacion.getPropuestas()));
             final String response = genson.serialize(votacion.getPropuestas());
-            //logger.info((Supplier<String>) idPropuestas);
+
+            logger.info(String.format("Imprimir propuestas de votacion %s : %s", idVotacion, votacion.getPropuestas()));
+            logger.info(response);
+
             return response;
         } else {
             // Manejar casos nulos, por ejemplo, devolver una lista vacía
