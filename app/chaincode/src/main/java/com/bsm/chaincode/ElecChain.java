@@ -2,6 +2,7 @@ package com.bsm.chaincode;
 
 import com.owlike.genson.GenericType;
 import com.owlike.genson.Genson;
+import org.apache.logging.log4j.util.Strings;
 import org.hyperledger.fabric.Logger;
 import org.hyperledger.fabric.contract.Context;
 import org.hyperledger.fabric.contract.ContractInterface;
@@ -18,6 +19,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 @Contract(
         name = "ElecChain",
@@ -373,7 +375,7 @@ public final class ElecChain implements ContractInterface{
 
         // Verifica que el votante receptor no haya votado o delegado ya
         if (votanteDestino.isVotado()) {
-            String errorMessage = String.format("Ya ha votado el receptor %s", idVotante);
+            String errorMessage = String.format("Ya ha votado el receptor %s", to);
             System.out.println(errorMessage);
             throw new ChaincodeException(errorMessage);
         }
@@ -439,18 +441,21 @@ public final class ElecChain implements ContractInterface{
       * Obtiene la lista de votaciones activas en el sistema.
       *
       * @param ctx Contexto de Hyperledger Fabric.
-      * @return List<Votacion> Lista de votaciones activas.
+      * @return List<String> Lista de votaciones activas.
     */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
-    public List<Votacion> getVotacionesActivas(Context ctx) {
+    public List<String> getVotacionesActivas(Context ctx) {
         ChaincodeStub stub = ctx.getStub();
         List<Votacion> votacionesActivas = new ArrayList<>();
+        int id = 0;
+        List<String> idVotacionesActivas = new ArrayList<>();
 
         // Obtener todas las claves del estado para identificar votaciones
         QueryResultsIterator<KeyValue> allVotes = stub.getStateByRange("", "");
         for (KeyValue keyValue : allVotes) {
+            id++;
             String stringValue = keyValue.getStringValue();
-            logger.info("stringvalue %s"+stringValue);
+            logger.info("votacion %s"+stringValue);
             // Verificar si el valor es nulo o vacío antes de deserializar
             if (stringValue != null && !stringValue.isEmpty()) {
                 Votacion votacion = deserializarVotacion(stringValue);
@@ -458,12 +463,15 @@ public final class ElecChain implements ContractInterface{
                 // Verificar si la deserialización retorna un objeto no nulo
                 if (votacion != null && votacion.getEstado() == EstadoVotacion.ABIERTA) {
                     votacionesActivas.add(votacion);
+                    idVotacionesActivas.add(String.valueOf(id));
                 }
             }
         }
 
         logger.info(String.format("Imprimir votaciones activas %s", votacionesActivas));
-        return votacionesActivas;
+        logger.info(String.format("Imprimir votaciones activas %s", idVotacionesActivas));
+
+        return idVotacionesActivas;
     }
 
     /**
@@ -474,17 +482,21 @@ public final class ElecChain implements ContractInterface{
      * @return List<Propuesta> Lista de propuestas de la votación.
      */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
-    public List<Propuesta> getPropuestasDeVotacion(Context ctx, String idVotacion) {
+    public Supplier<Propuesta> getPropuestasDeVotacion(Context ctx, String idVotacion) {
         Votacion votacion = getVotacion(ctx, idVotacion);
+        //List<String> idPropuestas = new ArrayList<>();
+
+        //for (int i = 0; i< votacion.getPropuestas().size())
 
         // Verificar si la votación y las propuestas no son nulas
         if (votacion != null && votacion.getPropuestas() != null) {
             logger.info(String.format("Imprimir propuestas de votacion %s : %s", idVotacion, votacion.getPropuestas()));
-            return votacion.getPropuestas();
+            //logger.info((Supplier<String>) idPropuestas);
+            return (Supplier<Propuesta>) votacion.getPropuestas();
         } else {
             // Manejar casos nulos, por ejemplo, devolver una lista vacía
             logger.warning(String.format("No hay propuestas de votación para %s", idVotacion));
-            return Collections.emptyList();
+            return (Supplier<Propuesta>) votacion.getPropuestas();
         }
     }
 
