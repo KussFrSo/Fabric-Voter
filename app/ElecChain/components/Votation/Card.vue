@@ -1,5 +1,5 @@
 <template>
-	<div class="shadow-lg bg-zinc-700/20 rounded-md p-4 h-52 w-96 hover:scale-110 transition-all cursor-pointer">
+	<div class="shadow-lg bg-zinc-700/20 rounded-md p-4 h-52 w-80 hover:scale-110 transition-all cursor-pointer" @click="isProposalDetailOpen = true">
 		<div v-if="isLoading" class="w-full h-full flex items-center justify-center">
 			<AtomSpinner />
 		</div>
@@ -18,7 +18,8 @@ export default defineComponent({
 		},
 	},
 	setup() {
-		return {};
+		const isProposalDetailOpen = useState('emailOpen', () => false);
+		return {isProposalDetailOpen};
 	},
 });
 </script>

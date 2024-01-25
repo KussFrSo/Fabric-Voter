@@ -1,7 +1,7 @@
 <template>
     <div class="bg-zinc-800 w-screen h-screen flex">
-        <Votation class="w-3/4"></Votation>
-        <VotationDetail class="w-1/4"></VotationDetail>
+        <Votation class="w-full grow"></Votation>
+        <VotationDetail v-if="isProposalDetailOpen" class="w-[500px]"></VotationDetail>
     </div>
 </template>
 
@@ -10,7 +10,9 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
     setup() {
+        const isProposalDetailOpen = useState('emailOpen', () => false);
         return {
+            isProposalDetailOpen,
         };
     },
 })
