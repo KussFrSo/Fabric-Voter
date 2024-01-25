@@ -412,7 +412,7 @@ public final class ElecChain implements ContractInterface{
      * @return Votacion Objeto de votación correspondiente.
      */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
-    public Votacion getVotacion(Context ctx, String id) {
+    public Votacion getVotacion(Context ctx, final String id) {
         ChaincodeStub stub = ctx.getStub();
 
         String votacionState = stub.getStringState(id);
@@ -444,18 +444,17 @@ public final class ElecChain implements ContractInterface{
       * @return List<String> Lista de votaciones activas.
     */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
-    public List<String> getVotacionesActivas(Context ctx) {
+    public String getVotacionesActivas(Context ctx) {
         ChaincodeStub stub = ctx.getStub();
-        List<Votacion> votacionesActivas = new ArrayList<>();
-        int id = 0;
-        List<String> idVotacionesActivas = new ArrayList<>();
+        List<Votacion> votacionesActivas = new ArrayList<Votacion>();
+
 
         // Obtener todas las claves del estado para identificar votaciones
         QueryResultsIterator<KeyValue> allVotes = stub.getStateByRange("", "");
         for (KeyValue keyValue : allVotes) {
-            id++;
+
             String stringValue = keyValue.getStringValue();
-            logger.info("votacion %s"+stringValue);
+            logger.info("votacion --> "+stringValue);
             // Verificar si el valor es nulo o vacío antes de deserializar
             if (stringValue != null && !stringValue.isEmpty()) {
                 Votacion votacion = deserializarVotacion(stringValue);
@@ -463,15 +462,15 @@ public final class ElecChain implements ContractInterface{
                 // Verificar si la deserialización retorna un objeto no nulo
                 if (votacion != null && votacion.getEstado() == EstadoVotacion.ABIERTA) {
                     votacionesActivas.add(votacion);
-                    idVotacionesActivas.add(String.valueOf(id));
+
                 }
             }
         }
+        final String response = genson.serialize(votacionesActivas);
 
         logger.info(String.format("Imprimir votaciones activas %s", votacionesActivas));
-        logger.info(String.format("Imprimir votaciones activas %s", idVotacionesActivas));
-
-        return idVotacionesActivas;
+        logger.info(String.format(response));
+        return response;
     }
 
     /**
@@ -482,21 +481,21 @@ public final class ElecChain implements ContractInterface{
      * @return List<Propuesta> Lista de propuestas de la votación.
      */
     @Transaction(intent = Transaction.TYPE.EVALUATE)
-    public Supplier<Propuesta> getPropuestasDeVotacion(Context ctx, String idVotacion) {
+    public String getPropuestasDeVotacion(Context ctx, final String idVotacion) {
         Votacion votacion = getVotacion(ctx, idVotacion);
         //List<String> idPropuestas = new ArrayList<>();
-
         //for (int i = 0; i< votacion.getPropuestas().size())
 
         // Verificar si la votación y las propuestas no son nulas
         if (votacion != null && votacion.getPropuestas() != null) {
             logger.info(String.format("Imprimir propuestas de votacion %s : %s", idVotacion, votacion.getPropuestas()));
+            final String response = genson.serialize(votacion.getPropuestas());
             //logger.info((Supplier<String>) idPropuestas);
-            return (Supplier<Propuesta>) votacion.getPropuestas();
+            return response;
         } else {
             // Manejar casos nulos, por ejemplo, devolver una lista vacía
             logger.warning(String.format("No hay propuestas de votación para %s", idVotacion));
-            return (Supplier<Propuesta>) votacion.getPropuestas();
+            return "Error - Lista vacía";
         }
     }
 
