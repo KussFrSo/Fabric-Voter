@@ -214,14 +214,14 @@ public final class ElecChain implements ContractInterface{
             System.out.println(errorMessage);
             throw new ChaincodeException(errorMessage);
         }
-        */
+
         //Comprobar si ha votado ya
         if (votacion.getVotantes().get(idVotante).isVotado()) {
             String errorMessage = String.format("Ya ha votado  %s en esta votacion", idVotante);
             System.out.println(errorMessage);
             throw new ChaincodeException(errorMessage, ElecChain.ElecChainErrors.VOTACION_NOT_AVAILABLE.toString());
         }
-
+        */
         // Comprobar estado votacion es Abierta
         if (votacion.getEstado() != EstadoVotacion.ABIERTA) {
             String errorMessage = String.format("La votacion  %s no esta abierta", idVotacion);
